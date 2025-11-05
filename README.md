@@ -661,8 +661,8 @@ else
 	-- 2️⃣ Tenta baixar remoto
 	local ok, code
 	local urls = {
-		"https://raw.githubusercontent.com/AdrainRazini/mastermod/refs/heads/main/module/dataGui.lua",
-		"https://animal-simulator-server.vercel.app/lua/DataGui.lua"
+		"https://raw.githubusercontent.com/nick0022/DataGui/refs/heads/main/README.md",
+		"https://raw.githubusercontent.com/nick0022/DataGui/refs/heads/main/README.md"
 	}
 
 	for _, url in ipairs(urls) do
@@ -671,7 +671,7 @@ else
 		end)
 		if okHttp and result and result ~= "" then
 			code = result
-			print("[🌐 Mod Loader] Código baixado de: " .. url)
+			print("[🌐 Mod Loader] Código baixado!")
 			break
 		else
 			warn("[⚠️ Mod Loader] Falha ao baixar de:", url)
