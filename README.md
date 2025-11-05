@@ -185,11 +185,7 @@ local playEvent = ReplicatedStorage:WaitForChild("Events"):WaitForChild("PLAYEve
 -- Índice da faixa atual
 local currentIndex = 1
 local isPlaying = false
-
--- Impede duplicação da GUI
-if PlayerGui:FindFirstChild(GuiName) then
-	return
-end
+local Loading = false
 
 --==========================--
 -- GUI PRINCIPAL
@@ -202,86 +198,93 @@ GL1["Scren"].Name = GuiName
 
 GL1["frame"] = Instance.new("Frame")
 GL1["frame"].Parent = GL1["Scren"]
-GL1["frame"].Size = UDim2.new(0, 420, 0, 180)
-GL1["frame"].Position = UDim2.new(0.5, -210, 0.8, -90)
-GL1["frame"].BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+GL1["frame"].Size = UDim2.new(0, 360, 0, 150)
+GL1["frame"].Position = UDim2.new(0.5, -180, 0.8, -65)
+GL1["frame"].BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 GL1["frame"].BorderSizePixel = 0
-GL1["frame"].BackgroundTransparency = 0.05
+GL1["frame"].BackgroundTransparency = 0.1
 
+-- Cantos arredondados
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 16)
+corner.CornerRadius = UDim.new(0, 10)
 corner.Parent = GL1["frame"]
 
-local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 50)), ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 35))}
-gradient.Parent = GL1["frame"]
+-- Sombras suaves
+local shadow = Instance.new("ImageLabel")
+shadow.Parent = GL1["frame"]
+shadow.ZIndex = -1
+shadow.Image = "rbxassetid://1316045217"
+shadow.ImageTransparency = 0.6
+shadow.ScaleType = Enum.ScaleType.Slice
+shadow.SliceCenter = Rect.new(10,10,118,118)
+shadow.Size = UDim2.new(1, 20, 1, 20)
+shadow.Position = UDim2.new(0, -10, 0, -10)
+shadow.BackgroundTransparency = 1
 
 -- ==========================
 -- 🔝 Top Bar
 -- ==========================
 GL1["TopBar"] = Instance.new("Frame")
 GL1["TopBar"].Parent = GL1["frame"]
-GL1["TopBar"].Size = UDim2.new(1, 0, 0, 35)
-GL1["TopBar"].BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+GL1["TopBar"].Size = UDim2.new(1, 0, 0, 28)
+GL1["TopBar"].BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 GL1["TopBar"].BorderSizePixel = 0
 
 local topCorner = Instance.new("UICorner")
-topCorner.CornerRadius = UDim.new(0, 16)
+topCorner.CornerRadius = UDim.new(0, 10)
 topCorner.Parent = GL1["TopBar"]
 
 GL1["TopBar_Label"] = Instance.new("TextLabel")
 GL1["TopBar_Label"].Parent = GL1["TopBar"]
-GL1["TopBar_Label"].Size = UDim2.new(1, -80, 1, 0)
-GL1["TopBar_Label"].Position = UDim2.new(0, 15, 0, 0)
+GL1["TopBar_Label"].Size = UDim2.new(1, -60, 1, 0)
+GL1["TopBar_Label"].Position = UDim2.new(0, 10, 0, 0)
 GL1["TopBar_Label"].BackgroundTransparency = 1
-GL1["TopBar_Label"].Text = "🎵 Music Player"
-GL1["TopBar_Label"].TextColor3 = Color3.fromRGB(100, 200, 255)
+GL1["TopBar_Label"].Text = "🎵 Player Music"
+GL1["TopBar_Label"].TextColor3 = Color3.fromRGB(255, 255, 255)
 GL1["TopBar_Label"].TextXAlignment = Enum.TextXAlignment.Left
 GL1["TopBar_Label"].Font = Enum.Font.GothamBold
 GL1["TopBar_Label"].TextScaled = true
 
--- Botão lista
-GL1["MinimizeBtn_List"] = Instance.new("TextButton")
-GL1["MinimizeBtn_List"].Parent = GL1["TopBar"]
-GL1["MinimizeBtn_List"].Size = UDim2.new(0, 30, 0, 30)
-GL1["MinimizeBtn_List"].Position = UDim2.new(1, -70, 0, 2.5)
-GL1["MinimizeBtn_List"].BackgroundColor3 = Color3.fromRGB(60, 100, 180)
-GL1["MinimizeBtn_List"].Text = "☰"
-GL1["MinimizeBtn_List"].TextColor3 = Color3.fromRGB(255, 255, 255)
-GL1["MinimizeBtn_List"].TextScaled = true
-GL1["MinimizeBtn_List"].Font = Enum.Font.GothamBold
-GL1["MinimizeBtn_List"].BorderSizePixel = 0
-
-local btnCorner2 = Instance.new("UICorner")
-btnCorner2.CornerRadius = UDim.new(0, 8)
-btnCorner2.Parent = GL1["MinimizeBtn_List"]
-
--- Botão fechar
+-- Botão de minimizar
 GL1["MinimizeBtn"] = Instance.new("TextButton")
 GL1["MinimizeBtn"].Parent = GL1["TopBar"]
-GL1["MinimizeBtn"].Size = UDim2.new(0, 30, 0, 30)
-GL1["MinimizeBtn"].Position = UDim2.new(1, -35, 0, 2.5)
-GL1["MinimizeBtn"].BackgroundColor3 = Color3.fromRGB(200, 80, 80)
-GL1["MinimizeBtn"].Text = "✕"
-GL1["MinimizeBtn"].TextColor3 = Color3.fromRGB(255, 255, 255)
+GL1["MinimizeBtn"].Size = UDim2.new(0, 25, 1, 0)
+GL1["MinimizeBtn"].Position = UDim2.new(1, -25, 0, 0)
+GL1["MinimizeBtn"].BackgroundColor3 = Color3.fromRGB(220, 60, 60)
+GL1["MinimizeBtn"].Text = "-"
+GL1["MinimizeBtn"].TextColor3 = Color3.fromRGB(255,255,255)
 GL1["MinimizeBtn"].TextScaled = true
 GL1["MinimizeBtn"].Font = Enum.Font.GothamBold
-GL1["MinimizeBtn"].BorderSizePixel = 0
 
 local btnCorner = Instance.new("UICorner")
-btnCorner.CornerRadius = UDim.new(0, 8)
+btnCorner.CornerRadius = UDim.new(0, 6)
 btnCorner.Parent = GL1["MinimizeBtn"]
+
+-- Botão lista lateral
+GL1["MinimizeBtn_List"] = Instance.new("TextButton")
+GL1["MinimizeBtn_List"].Parent = GL1["TopBar"]
+GL1["MinimizeBtn_List"].Size = UDim2.new(0, 25, 1, 0)
+GL1["MinimizeBtn_List"].Position = UDim2.new(1, -55, 0, 0)
+GL1["MinimizeBtn_List"].BackgroundColor3 = Color3.fromRGB(70, 70, 200)
+GL1["MinimizeBtn_List"].Text = "≡"
+GL1["MinimizeBtn_List"].TextColor3 = Color3.fromRGB(255,255,255)
+GL1["MinimizeBtn_List"].TextScaled = true
+GL1["MinimizeBtn_List"].Font = Enum.Font.GothamBold
+
+local btnCorner2 = Instance.new("UICorner")
+btnCorner2.CornerRadius = UDim.new(0, 6)
+btnCorner2.Parent = GL1["MinimizeBtn_List"]
 
 -- ==========================
 -- 🎵 Nome da música
 -- ==========================
 GL1["Name_id"] = Instance.new("TextLabel")
 GL1["Name_id"].Parent = GL1["frame"]
-GL1["Name_id"].Size = UDim2.new(0.6, -15, 0, 30)
-GL1["Name_id"].Position = UDim2.new(0, 15, 0, 40)
+GL1["Name_id"].Size = UDim2.new(1, -20, 0, 25)
+GL1["Name_id"].Position = UDim2.new(0, 10, 0, 30)
 GL1["Name_id"].BackgroundTransparency = 1
-GL1["Name_id"].Text = "♪ Aguardando..."
-GL1["Name_id"].TextColor3 = Color3.fromRGB(200, 200, 200)
+GL1["Name_id"].Text = "♪ Tocando: (nenhuma faixa)"
+GL1["Name_id"].TextColor3 = Color3.fromRGB(255, 255, 255)
 GL1["Name_id"].Font = Enum.Font.GothamSemibold
 GL1["Name_id"].TextScaled = true
 GL1["Name_id"].TextXAlignment = Enum.TextXAlignment.Left
@@ -291,8 +294,8 @@ GL1["Name_id"].TextXAlignment = Enum.TextXAlignment.Left
 -- ==========================
 GL1["CD_Icon"] = Instance.new("ImageLabel")
 GL1["CD_Icon"].Parent = GL1["frame"]
-GL1["CD_Icon"].Size = UDim2.new(0, 100, 0, 100)
-GL1["CD_Icon"].Position = UDim2.new(1, -125, 0, 50)
+GL1["CD_Icon"].Size = UDim2.new(0, 90, 0, 90)
+GL1["CD_Icon"].Position = UDim2.new(0, 15, 0.5, -15)
 GL1["CD_Icon"].Image = "rbxassetid://70716433051234"
 GL1["CD_Icon"].BackgroundTransparency = 1
 
@@ -301,73 +304,56 @@ GL1["CD_Icon"].BackgroundTransparency = 1
 -- ==========================
 GL1["Input_Angle_L"] = Instance.new("TextButton")
 GL1["Input_Angle_L"].Parent = GL1["frame"]
-GL1["Input_Angle_L"].Size = UDim2.new(0, 50, 0, 50)
-GL1["Input_Angle_L"].Position = UDim2.new(0, 25, 0.5, 5)
-GL1["Input_Angle_L"].BackgroundColor3 = Color3.fromRGB(60, 120, 180)
+GL1["Input_Angle_L"].Size = UDim2.new(0, 45, 0, 45)
+GL1["Input_Angle_L"].Position = UDim2.new(0, 100, 0.5, 10)
+GL1["Input_Angle_L"].BackgroundTransparency = 1
 GL1["Input_Angle_L"].Text = "◀"
 GL1["Input_Angle_L"].TextColor3 = Color3.fromRGB(255, 255, 255)
 GL1["Input_Angle_L"].TextScaled = true
 GL1["Input_Angle_L"].Font = Enum.Font.GothamBold
-GL1["Input_Angle_L"].BorderSizePixel = 0
-
-local cornerL = Instance.new("UICorner")
-cornerL.CornerRadius = UDim.new(0, 10)
-cornerL.Parent = GL1["Input_Angle_L"]
 
 GL1["Input_Bnt"] = Instance.new("TextButton")
 GL1["Input_Bnt"].Parent = GL1["frame"]
-GL1["Input_Bnt"].Size = UDim2.new(0, 50, 0, 50)
-GL1["Input_Bnt"].Position = UDim2.new(0, 85, 0.5, 5)
-GL1["Input_Bnt"].BackgroundColor3 = Color3.fromRGB(100, 200, 100)
+GL1["Input_Bnt"].Size = UDim2.new(0, 45, 0, 45)
+GL1["Input_Bnt"].Position = UDim2.new(0, 140, 0.5, 10)
+GL1["Input_Bnt"].BackgroundTransparency = 1
 GL1["Input_Bnt"].Text = "▶"
 GL1["Input_Bnt"].TextColor3 = Color3.fromRGB(255, 255, 255)
 GL1["Input_Bnt"].TextScaled = true
 GL1["Input_Bnt"].Font = Enum.Font.GothamBold
-GL1["Input_Bnt"].BorderSizePixel = 0
-
-local cornerP = Instance.new("UICorner")
-cornerP.CornerRadius = UDim.new(0, 10)
-cornerP.Parent = GL1["Input_Bnt"]
 
 GL1["Input_Angle_R"] = Instance.new("TextButton")
 GL1["Input_Angle_R"].Parent = GL1["frame"]
-GL1["Input_Angle_R"].Size = UDim2.new(0, 50, 0, 50)
-GL1["Input_Angle_R"].Position = UDim2.new(0, 145, 0.5, 5)
-GL1["Input_Angle_R"].BackgroundColor3 = Color3.fromRGB(60, 120, 180)
+GL1["Input_Angle_R"].Size = UDim2.new(0, 45, 0, 45)
+GL1["Input_Angle_R"].Position = UDim2.new(0, 180, 0.5, 10)
+GL1["Input_Angle_R"].BackgroundTransparency = 1
 GL1["Input_Angle_R"].Text = "▶"
 GL1["Input_Angle_R"].TextColor3 = Color3.fromRGB(255, 255, 255)
 GL1["Input_Angle_R"].TextScaled = true
 GL1["Input_Angle_R"].Font = Enum.Font.GothamBold
-GL1["Input_Angle_R"].BorderSizePixel = 0
 GL1["Input_Angle_R"].Rotation = 180
-
-local cornerR = Instance.new("UICorner")
-cornerR.CornerRadius = UDim.new(0, 10)
-cornerR.Parent = GL1["Input_Angle_R"]
 
 -- ==========================
 -- 📜 Frame lateral (lista)
 -- ==========================
 GL1["frame_List"] = Instance.new("Frame")
 GL1["frame_List"].Parent = GL1["frame"]
-GL1["frame_List"].Size = UDim2.new(0, 200, 0.95, 0)
-GL1["frame_List"].Position = UDim2.new(1, 5, 0, 35)
-GL1["frame_List"].BackgroundColor3 = Color3.fromRGB(25, 25, 40)
+GL1["frame_List"].Size = UDim2.new(0, 160, 1, 0)
+GL1["frame_List"].Position = UDim2.new(1, 8, 0, 0)
+GL1["frame_List"].BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 GL1["frame_List"].BorderSizePixel = 0
 GL1["frame_List"].Visible = false
 
 local listCorner = Instance.new("UICorner")
-listCorner.CornerRadius = UDim.new(0, 12)
+listCorner.CornerRadius = UDim.new(0, 10)
 listCorner.Parent = GL1["frame_List"]
 
--- ScrollingFrame para a lista de músicas
-GL1["ScrollList"] = Instance.new("ScrollingFrame")
-GL1["ScrollList"].Parent = GL1["frame_List"]
-GL1["ScrollList"].Size = UDim2.new(1, 0, 1, 0)
-GL1["ScrollList"].BackgroundTransparency = 1
-GL1["ScrollList"].ScrollBarThickness = 5
-GL1["ScrollList"].ScrollBarImageColor3 = Color3.fromRGB(100, 150, 200)
-GL1["ScrollList"].CanvasSize = UDim2.new(0, 0, 0, #listMusics * 28)
+GL1["Loading_Icon"] = Instance.new("ImageLabel")
+GL1["Loading_Icon"].Parent = GL1["frame_List"]
+GL1["Loading_Icon"].Size = UDim2.new(0, 80, 0, 80)
+GL1["Loading_Icon"].AnchorPoint = Vector2.new(0.5, 0.5)
+GL1["Loading_Icon"].Position = UDim2.new(0.5, 0, 0.5, 0)
+GL1["Loading_Icon"].BackgroundTransparency = 1
 
 --==========================--
 -- FUNÇÕES PRINCIPAIS
@@ -387,18 +373,16 @@ local function playCurrentTrack(selectedObj)
 	playEvent:FireServer(id)
 
 	local trackName = listMusics[currentIndex].name or "Faixa " .. tostring(currentIndex)
-	GL1["Name_id"].Text = "♪ " .. trackName
+	GL1["Name_id"].Text = "♪ Tocando: " .. trackName
 
 	isPlaying = true
-	GL1["Input_Bnt"].BackgroundColor3 = Color3.fromRGB(200, 100, 100)
 	GL1["Input_Bnt"].Text = "⏸"
 end
 
 local function pauseTrack()
-	playEvent:FireServer(0)
+	playEvent:FireServer("0")
 	GL1["Name_id"].Text = "⏸️ Pausado"
 	isPlaying = false
-	GL1["Input_Bnt"].BackgroundColor3 = Color3.fromRGB(100, 200, 100)
 	GL1["Input_Bnt"].Text = "▶"
 end
 
@@ -429,26 +413,86 @@ GL1["Input_Angle_R"].MouseButton1Click:Connect(function()
 	playCurrentTrack()
 end)
 
--- Minimizar lista
-GL1["MinimizeBtn_List"].MouseButton1Click:Connect(function()
-	GL1["frame_List"].Visible = not GL1["frame_List"].Visible
-end)
+local isMinimized = false
+local isMinimized_L = true
 
--- Fechar GUI
+-- Minimizar o player inteiro
 GL1["MinimizeBtn"].MouseButton1Click:Connect(function()
-	GL1["Scren"]:Destroy()
+	isMinimized = not isMinimized
+	GL1["CD_Icon"].Visible = not isMinimized
+	GL1["Input_Angle_L"].Visible = not isMinimized
+	GL1["Input_Bnt"].Visible = not isMinimized
+	GL1["Input_Angle_R"].Visible = not isMinimized
+	GL1["Name_id"].Visible = not isMinimized
+
+	if isMinimized then
+		GL1["frame"]:TweenSize(UDim2.new(0, 360, 0, 28), "Out", "Sine", 0.25, true)
+	else
+		GL1["frame"]:TweenSize(UDim2.new(0, 360, 0, 150), "Out", "Sine", 0.25, true)
+	end
+end)
+
+-- Minimizar apenas a lista lateral
+GL1["MinimizeBtn_List"].MouseButton1Click:Connect(function()
+	isMinimized_L = not isMinimized_L
+
+	if isMinimized_L then
+		GL1["frame_List"]:TweenSize(UDim2.new(0, 25, 1, 0), "Out", "Sine", 0.25, true)
+	else
+		GL1["frame_List"]:TweenSize(UDim2.new(0, 180, 0, 150), "Out", "Sine", 0.25, true)
+	end
+
+	GL1["frame_List"].Visible = not isMinimized_L
 end)
 
 --==========================--
--- CRIAR LISTA DE MÚSICAS
+-- EFEITOS VISUAIS
 --==========================--
 
+-- Hover
+local function applyHover(button)
+	button.MouseEnter:Connect(function()
+		button.BackgroundTransparency = 0.3
+	end)
+	button.MouseLeave:Connect(function()
+		button.BackgroundTransparency = 1
+	end)
+end
+
+applyHover(GL1["Input_Bnt"])
+applyHover(GL1["Input_Angle_L"])
+applyHover(GL1["Input_Angle_R"])
+
+-- Rotação do CD
+RunService.RenderStepped:Connect(function(dt)
+	if isPlaying then
+		GL1["CD_Icon"].Rotation = (GL1["CD_Icon"].Rotation + dt * 60) % 360
+	end
+
+	if Loading then
+		GL1["Loading_Icon"].Visible = true
+		GL1["Loading_Icon"].Rotation = (GL1["Loading_Icon"].Rotation + dt * 120) % 360
+	else
+		GL1["Loading_Icon"].Visible = false
+	end
+end)
+
+-- Criar lista de músicas
 task.spawn(function()
+	Loading = true
+	
+	local scrollFrame = Instance.new("ScrollingFrame")
+	scrollFrame.Parent = GL1["frame_List"]
+	scrollFrame.Size = UDim2.new(1, 0, 1, 0)
+	scrollFrame.BackgroundTransparency = 1
+	scrollFrame.ScrollBarThickness = 4
+	scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #listMusics * 25)
+	
 	for i, music in ipairs(listMusics) do
 		local btn = Instance.new("TextButton")
-		btn.Parent = GL1["ScrollList"]
-		btn.Size = UDim2.new(1, -6, 0, 26)
-		btn.Position = UDim2.new(0, 3, 0, (i-1) * 28)
+		btn.Parent = scrollFrame
+		btn.Size = UDim2.new(1, -6, 0, 23)
+		btn.Position = UDim2.new(0, 3, 0, (i-1) * 25)
 		btn.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
 		btn.BackgroundTransparency = 0
 		btn.BorderSizePixel = 0
@@ -478,44 +522,6 @@ task.spawn(function()
 			btn.TextColor3 = Color3.fromRGB(180, 180, 200)
 		end)
 	end
-end)
-
---==========================--
--- EFEITOS VISUAIS
---==========================--
-
--- Hover dos botões
-local function applyHover(button)
-	button.MouseEnter:Connect(function()
-		button.BackgroundTransparency = 0.1
-	end)
-	button.MouseLeave:Connect(function()
-		button.BackgroundTransparency = 0
-	end)
-end
-
-applyHover(GL1["Input_Bnt"])
-applyHover(GL1["Input_Angle_L"])
-applyHover(GL1["Input_Angle_R"])
-
--- Hover dos botões do top bar
-GL1["MinimizeBtn_List"].MouseEnter:Connect(function()
-	GL1["MinimizeBtn_List"].BackgroundTransparency = 0.2
-end)
-GL1["MinimizeBtn_List"].MouseLeave:Connect(function()
-	GL1["MinimizeBtn_List"].BackgroundTransparency = 0
-end)
-
-GL1["MinimizeBtn"].MouseEnter:Connect(function()
-	GL1["MinimizeBtn"].BackgroundTransparency = 0.2
-end)
-GL1["MinimizeBtn"].MouseLeave:Connect(function()
-	GL1["MinimizeBtn"].BackgroundTransparency = 0
-end)
-
--- Rotação do CD
-RunService.RenderStepped:Connect(function(dt)
-	if isPlaying then
-		GL1["CD_Icon"].Rotation = (GL1["CD_Icon"].Rotation + dt * 60) % 360
-	end
+	
+	Loading = false
 end)
