@@ -275,6 +275,7 @@ GL1["MinimizeBtn_List"].Text = "≡"
 GL1["MinimizeBtn_List"].TextColor3 = Color3.fromRGB(255,255,255)
 GL1["MinimizeBtn_List"].TextScaled = true
 GL1["MinimizeBtn_List"].Font = Enum.Font.GothamBold
+GL1["MinimizeBtn_List"].BorderSizePixel = 0
 
 local btnCorner2 = Instance.new("UICorner")
 btnCorner2.CornerRadius = UDim.new(0, 6)
@@ -307,27 +308,51 @@ GL1["CD_Icon"].BackgroundTransparency = 1
 -- ==========================
 -- ▶️ Botões de controle
 -- ==========================
-GL1["Input_Angle_L"] = Instance.new("ImageButton")
+GL1["Input_Angle_L"] = Instance.new("TextButton")
 GL1["Input_Angle_L"].Parent = GL1["frame"]
 GL1["Input_Angle_L"].Size = UDim2.new(0, 45, 0, 45)
 GL1["Input_Angle_L"].Position = UDim2.new(0, 100, 0.5, 10)
-GL1["Input_Angle_L"].BackgroundTransparency = 1
-GL1["Input_Angle_L"].Image = "rbxasset://textures/Cursor.png"
+GL1["Input_Angle_L"].BackgroundTransparency = 0.5
+GL1["Input_Angle_L"].BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+GL1["Input_Angle_L"].Text = "◀"
+GL1["Input_Angle_L"].TextColor3 = Color3.fromRGB(255, 255, 255)
+GL1["Input_Angle_L"].TextScaled = true
+GL1["Input_Angle_L"].Font = Enum.Font.GothamBold
 
-GL1["Input_Bnt"] = Instance.new("ImageButton")
+local cornerL = Instance.new("UICorner")
+cornerL.CornerRadius = UDim.new(0, 8)
+cornerL.Parent = GL1["Input_Angle_L"]
+
+GL1["Input_Bnt"] = Instance.new("TextButton")
 GL1["Input_Bnt"].Parent = GL1["frame"]
 GL1["Input_Bnt"].Size = UDim2.new(0, 45, 0, 45)
 GL1["Input_Bnt"].Position = UDim2.new(0, 140, 0.5, 10)
-GL1["Input_Bnt"].BackgroundTransparency = 1
-GL1["Input_Bnt"].Image = "rbxasset://textures/Cursor.png"
+GL1["Input_Bnt"].BackgroundTransparency = 0.5
+GL1["Input_Bnt"].BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+GL1["Input_Bnt"].Text = "▶"
+GL1["Input_Bnt"].TextColor3 = Color3.fromRGB(255, 255, 255)
+GL1["Input_Bnt"].TextScaled = true
+GL1["Input_Bnt"].Font = Enum.Font.GothamBold
 
-GL1["Input_Angle_R"] = Instance.new("ImageButton")
+local cornerP = Instance.new("UICorner")
+cornerP.CornerRadius = UDim.new(0, 8)
+cornerP.Parent = GL1["Input_Bnt"]
+
+GL1["Input_Angle_R"] = Instance.new("TextButton")
 GL1["Input_Angle_R"].Parent = GL1["frame"]
 GL1["Input_Angle_R"].Size = UDim2.new(0, 45, 0, 45)
 GL1["Input_Angle_R"].Position = UDim2.new(0, 180, 0.5, 10)
-GL1["Input_Angle_R"].BackgroundTransparency = 1
+GL1["Input_Angle_R"].BackgroundTransparency = 0.5
+GL1["Input_Angle_R"].BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+GL1["Input_Angle_R"].Text = "▶"
+GL1["Input_Angle_R"].TextColor3 = Color3.fromRGB(255, 255, 255)
+GL1["Input_Angle_R"].TextScaled = true
+GL1["Input_Angle_R"].Font = Enum.Font.GothamBold
 GL1["Input_Angle_R"].Rotation = 180
-GL1["Input_Angle_R"].Image = "rbxasset://textures/Cursor.png"
+
+local cornerR = Instance.new("UICorner")
+cornerR.CornerRadius = UDim.new(0, 8)
+cornerR.Parent = GL1["Input_Angle_R"]
 
 -- ==========================
 -- 📜 Frame lateral (lista)
@@ -430,14 +455,7 @@ end)
 -- Minimizar apenas a lista lateral
 GL1["MinimizeBtn_List"].MouseButton1Click:Connect(function()
 	isMinimized_L = not isMinimized_L
-
-	if isMinimized_L then
-		GL1["frame_List"]:TweenSize(UDim2.new(0, 25, 1, 0), "Out", "Sine", 0.25, true)
-	else
-		GL1["frame_List"]:TweenSize(UDim2.new(0, 160, 0, 150), "Out", "Sine", 0.25, true)
-	end
-
-	GL1["frame_List"].Visible = not isMinimized_L
+	GL1["frame_List"].Visible = not GL1["frame_List"].Visible
 end)
 
 --==========================--
